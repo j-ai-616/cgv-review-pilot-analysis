@@ -1,0 +1,10 @@
+﻿metric,value
+row_count,46600
+column_count,11
+date_parse_fail_count,0
+duplicate_review_id_count,0
+blank_review_count,1
+missing_review_count,0
+missing_score_count,0
+missing_like_count_count,0
+missing_author_count,7

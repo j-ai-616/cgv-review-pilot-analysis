@@ -1,0 +1,15 @@
+﻿metric,value
+total_reviews,46599
+positive_reviews,45265
+negative_reviews,1334
+positive_ratio,0.9714
+negative_ratio,0.0286
+avg_like_count,0.3556
+median_like_count,0.0
+avg_review_length,42.0255
+median_review_length,31.0
+image_review_count,489
+image_review_ratio,0.0105
+unique_authors,46583
+date_min,2026-02-07 17:01:23
+date_max,2026-03-30 00:16:23

@@ -1,0 +1,44 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variables
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Private project assets
+# =========================
+
+# Private crawling code
+private/
+
+# Raw data (always private)
+data/raw/
+
+# Processed data (all private by default)
+data/processed/*
+
+# Allow only sample data to be tracked
+!data/processed/sample_reviews.csv
+
+# Large / tabular data files
+*.xlsx
+*.xls

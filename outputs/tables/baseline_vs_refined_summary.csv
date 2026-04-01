@@ -1,0 +1,7 @@
+﻿item,baseline,refined
+text_normalization,기본 정규화,정규화 + html 해제 + 반복문자 정리
+html_escape_cleaning,미반영,반영
+replacement_rules,미반영,반영
+short_review_filter,미반영,review_length >= 10
+period_comparison,부분적,초반/중반/후반 비교
+keyword_interpretability,보통,향상
