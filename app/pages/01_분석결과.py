@@ -80,6 +80,7 @@ IMG_REVIEW_COUNT_DATE = FIG_DIR / "review_count_by_date.png"
 IMG_REFINED_POS_PERIOD = FIG_DIR / "refined_positive_ratio_by_period.png"
 IMG_REFINED_LEN_PERIOD = FIG_DIR / "refined_avg_review_length_by_period.png"
 IMG_REFINED_KEYWORDS = FIG_DIR / "refined_top_keywords_bar.png"
+IMG_REFINED_NEG_KEYWORDS = FIG_DIR / "refined_negative_keywords_bar.png"
 IMG_REFINED_BIGRAMS = FIG_DIR / "refined_bigram_bar.png"
 
 # -----------------------------
@@ -313,7 +314,10 @@ with tab2:
     col1, col2 = st.columns([1.3, 1.0], gap="large")
 
     with col1:
-        draw_keyword_bar_chart(neg_kw_df, "부정 리뷰 핵심 표현")
+        if IMG_REFINED_NEG_KEYWORDS.exists():
+            st.image(str(IMG_REFINED_NEG_KEYWORDS), use_container_width=True)
+        else:
+            draw_keyword_bar_chart(neg_kw_df, "부정 리뷰 핵심 표현")
 
     with col2:
         if not neg_kw_df.empty:
