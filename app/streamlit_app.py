@@ -87,7 +87,7 @@ positive_ratio = float(summary.get("positive_ratio", 0)) * 100 if "positive_rati
 # 제목
 # -----------------------------
 st.title("CGV 영화 리뷰 데이터 기반 관객 반응 초기 분석")
-st.caption("(차경진 교수님 공유용 파일럿 버전 · 저장된 결과를 불러와 시각화하는 1차 Streamlit 구성)")
+st.caption("(공유용 파일럿 버전 · 저장된 결과를 불러와 시각화하는 1차 Streamlit 구성)")
 
 # -----------------------------
 # 안내 박스
