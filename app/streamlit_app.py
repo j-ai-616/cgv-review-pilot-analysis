@@ -61,6 +61,19 @@ st.markdown(
         letter-spacing: -0.03em;
     }
 
+    .period-box {
+        margin-top: 1.1rem;
+        margin-bottom: 0.85rem;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        color: #374151;
+        font-size: 0.98rem;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
     .summary-card,
     .topic-card,
     .theory-card,
@@ -123,7 +136,7 @@ st.markdown(
     }
 
     .stMetric {
-        min-width: 130px;
+        min-width: 120px;
     }
 
     [data-testid="stMetricValue"] {
@@ -145,6 +158,7 @@ st.markdown(
 
     .footer-list {
         line-height: 1.9;
+        word-break: keep-all;
     }
     </style>
     """,
@@ -204,11 +218,20 @@ with col1:
         """
     )
 
-    m1, m2, m3, m4 = st.columns([1.05, 1.65, 1.0, 1.0])
+    st.markdown(
+        f"""
+        <div class="period-box">
+            <b>분석 기간</b><br>
+            {PERIOD}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    m1, m2, m3 = st.columns(3)
     m1.metric("분석 리뷰 수", f"{TOTAL_REVIEWS:,}건")
-    m2.metric("분석 기간", PERIOD)
-    m3.metric("긍정 비율", f"{POSITIVE_RATIO:.2f}%")
-    m4.metric("부정 비율", f"{NEGATIVE_RATIO:.2f}%")
+    m2.metric("긍정 비율", f"{POSITIVE_RATIO:.2f}%")
+    m3.metric("부정 비율", f"{NEGATIVE_RATIO:.2f}%")
 
 with col2:
     if POSTER_PATH.exists():
