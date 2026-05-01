@@ -612,12 +612,12 @@ with tab_topic:
     st.markdown(
         """
         <div class="blue-box">
-        현재 GitHub 산출물 기준으로 BERTopic 전용 이미지 파일은 별도로 확인되지 않아,
-        본 페이지에서는 토픽 결과를 해석 카드 형태로 정리했습니다.
+        BERTopic 결과는 관객 반응이 하나의 긍정·부정 구분으로만 설명되지 않고,
+        배우 연기, 감동, 한국영화에 대한 만족감, CG 아쉬움 등 여러 담론 축으로 구성되어 있음을 보여줍니다.
         </div>
         """,
         unsafe_allow_html=True,
-    )
+    )    
 
 st.markdown("---")
 
