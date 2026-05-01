@@ -246,24 +246,6 @@ cgv-review-pilot-analysis/
 
 ---
 
-## 🚀 How to Run
-
-```bash
-git clone https://github.com/j-ai-616/cgv-review-pilot-analysis.git
-cd cgv-review-pilot-analysis
-
-pip install -r requirements.txt
-streamlit run app/streamlit_app.py
-```
-
-또는 환경에 따라 아래 명령으로 실행할 수 있습니다.
-
-```bash
-python -m streamlit run app/streamlit_app.py
-```
-
----
-
 ## 📌 Project Significance
 
 본 프로젝트는 다음의 흐름을 하나로 연결한 실전형 데이터 분석 프로젝트입니다.
