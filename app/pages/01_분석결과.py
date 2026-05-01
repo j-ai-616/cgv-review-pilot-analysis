@@ -139,9 +139,9 @@ st.markdown(
 # -----------------------------
 # 경로 설정
 # -----------------------------
-APP_DIR = Path(__file__).resolve().parent          # app/pages
-APP_ROOT = APP_DIR.parent                         # app
-ROOT = APP_ROOT.parent                            # repo root
+APP_DIR = Path(__file__).resolve().parent
+APP_ROOT = APP_DIR.parent
+ROOT = APP_ROOT.parent
 
 FIGURES_DIR = ROOT / "outputs" / "figures"
 TABLES_DIR = ROOT / "outputs" / "tables"
@@ -149,22 +149,15 @@ TABLES_DIR = ROOT / "outputs" / "tables"
 # -----------------------------
 # 최종 분석 기준값
 # -----------------------------
-TOTAL_REVIEWS = 46599
-POSITIVE_REVIEWS = 45265
-NEGATIVE_REVIEWS = 1334
-POSITIVE_RATIO = 97.14
-NEGATIVE_RATIO = 2.86
+TOTAL_REVIEWS = 49010
+POSITIVE_RATIO = 97.07
+NEGATIVE_RATIO = 100 - POSITIVE_RATIO
+POSITIVE_REVIEWS = round(TOTAL_REVIEWS * POSITIVE_RATIO / 100)
+NEGATIVE_REVIEWS = TOTAL_REVIEWS - POSITIVE_REVIEWS
 PERIOD = "2026-02-05 ~ 2026-03-29"
 
-TOPIC_SUMMARY = {
-    0: "배우 연기와 감동 중심의 전반적 호평",
-    1: "유해진·박지훈 연기에 대한 집중 호평",
-    2: "오랜만에 만족스러운 한국영화라는 반응",
-    3: "호랑이 CG에 대한 아쉬움",
-}
-
 # -----------------------------
-# 실제 GitHub 산출물 기준 파일명
+# 산출물 파일 후보
 # -----------------------------
 FIGURE_PATHS = {
     "daily_positive_ratio": [
@@ -198,9 +191,6 @@ FIGURE_PATHS = {
 }
 
 TABLE_PATHS = {
-    "summary": [
-        TABLES_DIR / "summary_statistics.csv",
-    ],
     "daily_trend": [
         TABLES_DIR / "daily_trend.csv",
         TABLES_DIR / "daily_trend_from_notebook.csv",
@@ -232,6 +222,7 @@ TABLE_PATHS = {
         TABLES_DIR / "bigrams.csv",
     ],
 }
+
 
 # -----------------------------
 # 유틸 함수
@@ -265,7 +256,7 @@ def load_table(key: str) -> pd.DataFrame:
 def show_figure(key: str, caption: str) -> None:
     path = first_existing(FIGURE_PATHS[key])
     if path is None:
-        st.info(f"그래프 파일을 찾을 수 없습니다: {key}")
+        st.info("시각화 결과를 준비 중입니다.")
         return
 
     st.image(str(path), use_container_width=True)
@@ -330,9 +321,18 @@ st.header("핵심 요약")
 
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("총 리뷰 수", f"{TOTAL_REVIEWS:,}")
-m2.metric("긍정 리뷰 수", f"{POSITIVE_REVIEWS:,}")
-m3.metric("부정 리뷰 수", f"{NEGATIVE_REVIEWS:,}")
+m2.metric("긍정 리뷰 수", f"약 {POSITIVE_REVIEWS:,}")
+m3.metric("부정 리뷰 수", f"약 {NEGATIVE_REVIEWS:,}")
 m4.metric("긍정 비율", f"{POSITIVE_RATIO:.2f}%")
+
+st.markdown(
+    f"""
+    <div class="small-muted">
+    분석 기간: <b>{PERIOD}</b>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -366,7 +366,7 @@ with i2:
         """
         <div class="yellow-box">
         <b>핵심 메시지 3</b><br>
-        날짜별 긍정 비율 추이에서는 후반부에 소폭 하락 구간이 관찰됩니다.
+        관객 반응은 단순한 긍정·부정 구분을 넘어 여러 담론 축으로 구성됩니다.
         </div>
         """,
         unsafe_allow_html=True,
@@ -378,7 +378,7 @@ with i2:
         """
         <div class="yellow-box">
         <b>핵심 메시지 4</b><br>
-        부정 리뷰에서는 스토리, 연출, 기대 대비 아쉬움 관련 표현이 상대적으로 더 많이 나타납니다.
+        호랑이 CG에 대한 아쉬움처럼 구체적 요소에 대한 세부 반응도 독립적으로 확인됩니다.
         </div>
         """,
         unsafe_allow_html=True,
@@ -405,9 +405,9 @@ st.markdown(
     """
     <div class="note-box">
     <b>해석 포인트</b><br>
-    전체 평균만 보면 매우 긍정적인 작품처럼 보이지만, 날짜별 추이를 함께 보면 일부 후반부 구간에서
-    긍정 비율이 다소 흔들리는 구간을 확인할 수 있습니다. 이는 영화 평가가 고정된 하나의 수치가 아니라,
-    관람 시점과 누적된 입소문에 따라 달라질 수 있음을 보여줍니다.
+    전체 평균만 보면 매우 긍정적인 작품처럼 보이지만, 날짜별 추이를 함께 보면 관객 반응이
+    시간에 따라 조금씩 달라질 수 있음을 확인할 수 있습니다. 이는 영화 평가가 고정된 하나의 수치가 아니라,
+    관람 시점과 누적된 입소문에 따라 변화할 수 있음을 보여줍니다.
     </div>
     """,
     unsafe_allow_html=True,
@@ -416,7 +416,7 @@ st.markdown(
 daily_trend = normalize_table(load_table("daily_trend"))
 
 with st.expander("날짜별 데이터 표 보기"):
-    show_table(daily_trend, "날짜별 추이 표 파일을 찾을 수 없습니다.", height=360)
+    show_table(daily_trend, "날짜별 추이 표를 준비 중입니다.", height=360)
 
 st.markdown("---")
 
@@ -440,8 +440,8 @@ st.markdown(
     <div class="note-box">
     <b>해석 포인트</b><br>
     시기별 비교는 단순히 리뷰 수의 차이만 보는 것이 아니라, 작품을 둘러싼 기대와 반응의 흐름이
-    어떻게 이동하는지를 보여줍니다. 특히 후반부의 소폭 변화는 사회적 기대와 실제 경험 사이의
-    간극 가능성을 시사합니다.
+    어떻게 이동하는지를 보여줍니다. 초반·중반·후반의 차이는 관객 기대와 실제 관람 경험 사이의
+    관계를 해석하는 단서가 됩니다.
     </div>
     """,
     unsafe_allow_html=True,
@@ -450,7 +450,7 @@ st.markdown(
 period_summary = normalize_table(load_table("period_summary"))
 
 with st.expander("시기별 요약 표 보기"):
-    show_table(period_summary, "시기별 요약 표 파일을 찾을 수 없습니다.", height=260)
+    show_table(period_summary, "시기별 요약 표를 준비 중입니다.", height=260)
 
 st.markdown("---")
 
@@ -475,7 +475,7 @@ with tab_pos:
         positive_keywords = normalize_table(load_table("positive_keywords"))
         show_table(
             positive_keywords.head(20),
-            "긍정 키워드 표 파일을 찾을 수 없습니다.",
+            "긍정 키워드 표를 준비 중입니다.",
             height=390,
         )
 
@@ -500,7 +500,7 @@ with tab_neg:
         negative_keywords = normalize_table(load_table("negative_keywords"))
         show_table(
             negative_keywords.head(20),
-            "부정 키워드 표 파일을 찾을 수 없습니다.",
+            "부정 키워드 표를 준비 중입니다.",
             height=390,
         )
 
@@ -525,7 +525,7 @@ with tab_bigram:
         bigrams = normalize_table(load_table("bigrams"))
         show_table(
             bigrams.head(20),
-            "결합 표현 표 파일을 찾을 수 없습니다.",
+            "결합 표현 표를 준비 중입니다.",
             height=390,
         )
 
@@ -617,7 +617,7 @@ with tab_topic:
         </div>
         """,
         unsafe_allow_html=True,
-    )    
+    )
 
 st.markdown("---")
 
@@ -630,7 +630,7 @@ period_keywords = normalize_table(load_table("period_keywords"))
 
 show_table(
     period_keywords.head(40),
-    "시기별 키워드 표 파일을 찾을 수 없습니다.",
+    "시기별 키워드 표를 준비 중입니다.",
     height=430,
 )
 
@@ -658,7 +658,7 @@ with tab_pos_review:
     positive_examples = normalize_table(load_table("positive_examples"))
     show_table(
         positive_examples.head(10),
-        "긍정 리뷰 예시 파일을 찾을 수 없습니다.",
+        "긍정 리뷰 예시를 준비 중입니다.",
         height=380,
     )
 
@@ -666,7 +666,7 @@ with tab_neg_review:
     negative_examples = normalize_table(load_table("negative_examples"))
     show_table(
         negative_examples.head(10),
-        "부정 리뷰 예시 파일을 찾을 수 없습니다.",
+        "부정 리뷰 예시를 준비 중입니다.",
         height=380,
     )
 
@@ -693,8 +693,8 @@ st.markdown(
     f"""
     <div class="footer-list">
     <b>1. 전체 평가는 매우 긍정적입니다.</b><br>
-    전체 {TOTAL_REVIEWS:,}건의 리뷰 중 긍정 리뷰는 {POSITIVE_REVIEWS:,}건으로,
-    긍정 비율은 {POSITIVE_RATIO:.2f}%입니다. 이는 관객 반응이 전반적으로 높은 만족도를 보였음을 의미합니다.
+    최종 clean 데이터 {TOTAL_REVIEWS:,}건 기준 긍정 비율은 {POSITIVE_RATIO:.2f}%입니다.
+    이는 관객 반응이 전반적으로 높은 만족도를 보였음을 의미합니다.
     <br><br>
 
     <b>2. 긍정 반응의 중심은 배우 연기와 감정적 몰입입니다.</b><br>
@@ -707,12 +707,14 @@ st.markdown(
     특히 호랑이 CG에 대한 아쉬움은 BERTopic 결과에서도 독립된 토픽으로 확인됩니다.
     <br><br>
 
-    <b>4. 시계열적으로는 후반부에서 소폭 하락 구간이 보입니다.</b><br>
-    이는 누적된 입소문과 사회적 기대가 관객의 실제 관람 경험과 만나면서 평가의 기준이 달라질 수 있음을 보여줍니다.
+    <b>4. 관객 반응은 여러 토픽 구조로 구성됩니다.</b><br>
+    BERTopic 결과는 배우 연기와 감동, 특정 배우에 대한 호평, 한국영화에 대한 만족감,
+    CG 아쉬움이라는 복수의 담론 축을 보여줍니다.
     <br><br>
 
-    <b>5. 본 파일럿 버전은 저장된 결과를 시각적으로 정리한 1차 대시보드입니다.</b><br>
-    향후 최종 데이터 확보와 추가 모델링을 통해 BERTopic 결과, 감성 분석 기준, 시계열 해석을 더 정교하게 확장할 수 있습니다.
+    <b>5. 본 프로젝트는 텍스트 분석 결과를 Streamlit으로 시각화한 사례입니다.</b><br>
+    데이터 수집, 전처리, 감성 분석, 키워드 분석, BERTopic 토픽 모델링, 대시보드 구현까지
+    하나의 흐름으로 연결했습니다.
     </div>
     """,
     unsafe_allow_html=True,
