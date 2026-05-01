@@ -135,10 +135,6 @@ st.markdown(
         line-height: 1.65;
     }
 
-    .stMetric {
-        min-width: 120px;
-    }
-
     [data-testid="stMetricValue"] {
         font-size: 1.55rem;
         white-space: nowrap;
@@ -171,17 +167,32 @@ st.markdown(
 APP_DIR = Path(__file__).resolve().parent
 ROOT = APP_DIR.parent
 
-POSTER_PATH = ROOT / "assets" / "images" / "movie_poster.jpg"
+POSTER_CANDIDATES = [
+    APP_DIR / "assets" / "images" / "movie_poster.jpg",
+    APP_DIR / "assets" / "movie_poster.jpg",
+    ROOT / "assets" / "images" / "movie_poster.jpg",
+    ROOT / "app" / "assets" / "images" / "movie_poster.jpg",
+]
 
 # -----------------------------
 # 최종 분석 기준값
 # -----------------------------
-TOTAL_REVIEWS = 46599
-POSITIVE_REVIEWS = 45265
-NEGATIVE_REVIEWS = 1334
-POSITIVE_RATIO = 97.14
-NEGATIVE_RATIO = 2.86
+TOTAL_REVIEWS = 49010
+POSITIVE_RATIO = 97.07
+NEGATIVE_RATIO = 100 - POSITIVE_RATIO
+POSITIVE_REVIEWS = round(TOTAL_REVIEWS * POSITIVE_RATIO / 100)
+NEGATIVE_REVIEWS = TOTAL_REVIEWS - POSITIVE_REVIEWS
 PERIOD = "2026-02-05 ~ 2026-03-29"
+
+
+def first_existing(paths: list[Path]) -> Path | None:
+    for path in paths:
+        if path.exists():
+            return path
+    return None
+
+
+POSTER_PATH = first_existing(POSTER_CANDIDATES)
 
 # -----------------------------
 # Hero
@@ -234,14 +245,12 @@ with col1:
     m3.metric("부정 비율", f"{NEGATIVE_RATIO:.2f}%")
 
 with col2:
-    if POSTER_PATH.exists():
+    if POSTER_PATH is not None:
         st.image(
             str(POSTER_PATH),
             caption="영화 <왕과 사는 남자> 포스터",
             use_container_width=True,
         )
-    else:
-        st.warning("포스터 이미지를 찾을 수 없습니다: assets/images/movie_poster.jpg")
 
 st.markdown("---")
 
@@ -262,8 +271,8 @@ with r1:
             관객 반응은 전반적으로 매우 긍정적인 방향으로 형성되었습니다.
             </p>
             <p class="small-muted">
-            긍정 리뷰 수: {POSITIVE_REVIEWS:,}건<br>
-            부정 리뷰 수: {NEGATIVE_REVIEWS:,}건
+            긍정 리뷰 수: 약 {POSITIVE_REVIEWS:,}건<br>
+            부정 리뷰 수: 약 {NEGATIVE_REVIEWS:,}건
             </p>
         </div>
         """,
@@ -488,7 +497,7 @@ st.markdown(
         동시에 <b>호랑이 CG에 대한 아쉬움</b>처럼 구체적이고 세부적인 불만 요인도 독립된 토픽으로 확인되었습니다.
         <br><br>
         따라서 본 프로젝트는 CGV 리뷰 데이터를 활용해 관객 경험을 정량적으로 구조화하고,
-        영화 소비자 반응을 감성 분석과 토픽 모델링 관점에서 해석한 파일럿 분석 사례로 볼 수 있습니다.
+        영화 소비자 반응을 감성 분석과 토픽 모델링 관점에서 해석한 사례로 볼 수 있습니다.
     </div>
     """,
     unsafe_allow_html=True,
@@ -508,6 +517,7 @@ st.markdown(
     - 긍정 리뷰와 부정 리뷰의 비율 비교<br>
     - 날짜별 긍정 비율과 리뷰 수 변화<br>
     - 초반·중반·후반 시기별 비교<br>
+    - 긍정·부정 리뷰의 핵심 표현 비교<br>
     - BERTopic 기반 주요 토픽 구조<br>
     - 관객 반응에 대한 종합 해석
     </div>
