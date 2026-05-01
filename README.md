@@ -217,6 +217,8 @@ streamlit run app/streamlit_app.py
 즉, 데이터 분석 → 해석 → 시각화 → 공유까지 연결한
 실전형 데이터 분석 포트폴리오입니다.
 
+---
+
 ## 👤 Author
 
 Ji-Eun Son
