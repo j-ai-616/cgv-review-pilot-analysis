@@ -1,5 +1,4 @@
 from pathlib import Path
-import pandas as pd
 import streamlit as st
 
 # -----------------------------
@@ -23,87 +22,129 @@ st.markdown(
     }
 
     .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2.5rem;
-        max-width: 1150px;
+        padding-top: 3.2rem;
+        padding-bottom: 3rem;
+        max-width: 1120px;
+    }
+
+    h1, h2, h3 {
+        letter-spacing: -0.03em;
     }
 
     .hero-box {
-        padding: 2rem 2rem 1.6rem 2rem;
-        border-radius: 24px;
+        padding: 2.1rem 2.2rem 1.9rem 2.2rem;
+        border-radius: 18px;
         background: linear-gradient(135deg, #111827 0%, #374151 100%);
         color: white;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2.2rem;
     }
 
     .hero-title {
-        font-size: 2.1rem;
+        font-size: 2rem;
         font-weight: 800;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.35;
     }
 
     .hero-subtitle {
-        font-size: 1.05rem;
+        font-size: 1.02rem;
         color: #e5e7eb;
-        line-height: 1.7;
+        line-height: 1.75;
+        word-break: keep-all;
     }
 
     .section-title {
         font-size: 1.45rem;
         font-weight: 800;
         margin-top: 0.5rem;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.03em;
     }
 
-    .summary-card {
-        padding: 1.1rem 1.1rem 0.9rem 1.1rem;
-        border-radius: 18px;
+    .summary-card,
+    .topic-card,
+    .theory-card,
+    .question-card {
+        padding: 1.15rem 1.2rem 1rem 1.2rem;
+        border-radius: 16px;
         border: 1px solid #e5e7eb;
         background-color: #ffffff;
         height: 100%;
-        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+        line-height: 1.65;
+        word-break: keep-all;
     }
 
     .topic-card {
-        padding: 1rem 1rem 0.85rem 1rem;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
         background-color: #fafafa;
-        height: 100%;
-    }
-
-    .theory-card {
-        padding: 1rem 1rem 0.85rem 1rem;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        background-color: #ffffff;
-        height: 100%;
+        min-height: 145px;
     }
 
     .question-card {
-        padding: 1rem 1rem 0.85rem 1rem;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
         background-color: #f9fafb;
-        height: 100%;
+        min-height: 155px;
+    }
+
+    .theory-card {
+        min-height: 220px;
+    }
+
+    .summary-card h4,
+    .topic-card h4,
+    .theory-card h4,
+    .question-card h4 {
+        margin-top: 0;
+        margin-bottom: 0.65rem;
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
+
+    .summary-card p,
+    .topic-card p,
+    .theory-card p,
+    .question-card p {
+        margin-bottom: 0.4rem;
     }
 
     .insight-box {
-        padding: 1.1rem 1.2rem;
-        border-radius: 18px;
+        padding: 1.25rem 1.35rem;
+        border-radius: 16px;
         border-left: 6px solid #374151;
         background-color: #f9fafb;
-        line-height: 1.7;
+        line-height: 1.8;
+        word-break: keep-all;
     }
 
     .small-muted {
         color: #6b7280;
-        font-size: 0.94rem;
-        line-height: 1.6;
+        font-size: 0.93rem;
+        line-height: 1.65;
     }
 
-    .center-text {
-        text-align: center;
+    .stMetric {
+        min-width: 130px;
+    }
+
+    [data-testid="stMetricValue"] {
+        font-size: 1.55rem;
+        white-space: nowrap;
+    }
+
+    [data-testid="stMetricLabel"] {
+        white-space: nowrap;
+    }
+
+    div[data-testid="stHorizontalBlock"] {
+        gap: 1.25rem;
+    }
+
+    hr {
+        margin: 2.2rem 0;
+    }
+
+    .footer-list {
+        line-height: 1.9;
     }
     </style>
     """,
@@ -117,31 +158,16 @@ APP_DIR = Path(__file__).resolve().parent
 ROOT = APP_DIR.parent
 
 POSTER_PATH = ROOT / "assets" / "images" / "movie_poster.jpg"
-SUMMARY_PATH = ROOT / "outputs" / "tables" / "summary_statistics.csv"
 
 # -----------------------------
-# 데이터 로드
+# 최종 분석 기준값
 # -----------------------------
-@st.cache_data
-def load_summary(path: Path) -> dict:
-    if not path.exists():
-        return {}
-
-    df = pd.read_csv(path)
-    if {"metric", "value"}.issubset(df.columns):
-        return dict(zip(df["metric"], df["value"]))
-    return {}
-
-
-summary = load_summary(SUMMARY_PATH)
-
-# 최종 분석 결과 기준값
-total_reviews = int(float(summary.get("total_reviews", 49010)))
-positive_ratio = float(summary.get("positive_ratio", 0.9707)) * 100
-negative_ratio = 100 - positive_ratio
-
-positive_reviews = int(float(summary.get("positive_reviews", round(total_reviews * positive_ratio / 100))))
-negative_reviews = int(float(summary.get("negative_reviews", total_reviews - positive_reviews)))
+TOTAL_REVIEWS = 46599
+POSITIVE_REVIEWS = 45265
+NEGATIVE_REVIEWS = 1334
+POSITIVE_RATIO = 97.14
+NEGATIVE_RATIO = 2.86
+PERIOD = "2026-02-05 ~ 2026-03-29"
 
 # -----------------------------
 # Hero
@@ -151,8 +177,9 @@ st.markdown(
     <div class="hero-box">
         <div class="hero-title">영화 &lt;왕과 사는 남자&gt; CGV 리뷰 분석</div>
         <div class="hero-subtitle">
-            감성 분포와 BERTopic 기반 토픽 구조를 활용해 관객 반응의 전체 흐름,
-            긍정·부정 담론의 차이, 그리고 플랫폼 리뷰 데이터가 보여주는 집단적 반응 구조를 분석한 프로젝트입니다.
+            CGV 관객 리뷰 데이터를 기반으로 감성 분포와 BERTopic 토픽 구조를 분석한 프로젝트입니다.
+            리뷰 전반의 긍정·부정 흐름, 주요 호평 요인, 구체적 아쉬움, 그리고 플랫폼 리뷰 데이터가 보여주는
+            집단적 관객 반응 구조를 함께 해석합니다.
         </div>
     </div>
     """,
@@ -160,9 +187,9 @@ st.markdown(
 )
 
 # -----------------------------
-# 소개 + 포스터
+# 프로젝트 개요
 # -----------------------------
-col1, col2 = st.columns([1.6, 1.0], gap="large")
+col1, col2 = st.columns([1.55, 1.0], gap="large")
 
 with col1:
     st.markdown('<div class="section-title">프로젝트 개요</div>', unsafe_allow_html=True)
@@ -177,11 +204,11 @@ with col1:
         """
     )
 
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric("분석 리뷰 수", f"{total_reviews:,}건")
-    m2.metric("분석 기간", "2026.02.05 ~ 03.29")
-    m3.metric("긍정 비율", f"{positive_ratio:.2f}%")
-    m4.metric("부정 비율", f"{negative_ratio:.2f}%")
+    m1, m2, m3, m4 = st.columns([1.05, 1.65, 1.0, 1.0])
+    m1.metric("분석 리뷰 수", f"{TOTAL_REVIEWS:,}건")
+    m2.metric("분석 기간", PERIOD)
+    m3.metric("긍정 비율", f"{POSITIVE_RATIO:.2f}%")
+    m4.metric("부정 비율", f"{NEGATIVE_RATIO:.2f}%")
 
 with col2:
     if POSTER_PATH.exists():
@@ -208,12 +235,12 @@ with r1:
         <div class="summary-card">
             <h4>감성 분포</h4>
             <p>
-            전체 리뷰 중 긍정 리뷰 비율은 <b>{positive_ratio:.2f}%</b>로,
+            전체 리뷰 중 긍정 리뷰 비율은 <b>{POSITIVE_RATIO:.2f}%</b>로,
             관객 반응은 전반적으로 매우 긍정적인 방향으로 형성되었습니다.
             </p>
             <p class="small-muted">
-            긍정 리뷰 수: {positive_reviews:,}건<br>
-            부정 리뷰 수: {negative_reviews:,}건
+            긍정 리뷰 수: {POSITIVE_REVIEWS:,}건<br>
+            부정 리뷰 수: {NEGATIVE_REVIEWS:,}건
             </p>
         </div>
         """,
@@ -230,7 +257,7 @@ with r2:
             <b>배우 연기와 감동 중심의 전반적 호평</b>으로 확인되었습니다.
             </p>
             <p class="small-muted">
-            관객들은 배우의 연기, 감정선, 몰입감, 여운을 중심으로 긍정적 평가를 남겼습니다.
+            관객들은 배우 연기, 감정선, 몰입감, 여운을 중심으로 긍정적 평가를 남겼습니다.
             </p>
         </div>
         """,
@@ -247,7 +274,7 @@ with r3:
             <b>호랑이 CG에 대한 아쉬움</b>도 독립된 토픽으로 도출되었습니다.
             </p>
             <p class="small-muted">
-            이는 단순한 부정 평가가 아니라 특정 요소에 대한 세부적 관객 반응으로 해석할 수 있습니다.
+            이는 특정 요소에 대한 세부적 관객 반응으로 해석할 수 있습니다.
             </p>
         </div>
         """,
@@ -338,6 +365,8 @@ with t2:
         """,
         unsafe_allow_html=True,
     )
+
+st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
 t3, t4 = st.columns(2, gap="large")
 
@@ -451,17 +480,21 @@ st.markdown('<div class="section-title">분석 결과 페이지에서 확인할 
 
 st.markdown(
     f"""
-    - 전체 리뷰 **{total_reviews:,}건** 기준 감성 분포
-    - 긍정 리뷰와 부정 리뷰의 비율 비교
-    - BERTopic 기반 주요 토픽별 리뷰 수
-    - 배우 연기, 감동, 한국영화 만족감, CG 아쉬움의 토픽 구조
+    <div class="footer-list">
+    - 전체 리뷰 <b>{TOTAL_REVIEWS:,}건</b> 기준 감성 분포<br>
+    - 긍정 리뷰와 부정 리뷰의 비율 비교<br>
+    - 날짜별 긍정 비율과 리뷰 수 변화<br>
+    - 초반·중반·후반 시기별 비교<br>
+    - BERTopic 기반 주요 토픽 구조<br>
     - 관객 반응에 대한 종합 해석
-    """
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-left, center, right = st.columns([1, 1.25, 1])
+left, center, right = st.columns([1, 1.2, 1])
 
 with center:
     if st.button("분석 결과 보기", use_container_width=True, type="primary"):
