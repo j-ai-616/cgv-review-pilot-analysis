@@ -42,38 +42,10 @@ st.markdown(
         font-size: 0.95rem;
         margin-top: -0.5rem;
         margin-bottom: 1.6rem;
-    }
-
-    .summary-card {
-        padding: 1.05rem 1.15rem 0.95rem 1.15rem;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        background-color: #ffffff;
-        height: 100%;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-        line-height: 1.65;
         word-break: keep-all;
     }
 
-    .insight-green {
-        padding: 1rem 1.1rem;
-        border-radius: 12px;
-        background-color: #eaf7ef;
-        color: #166534;
-        line-height: 1.65;
-        word-break: keep-all;
-    }
-
-    .insight-yellow {
-        padding: 1rem 1.1rem;
-        border-radius: 12px;
-        background-color: #fff7d6;
-        color: #854d0e;
-        line-height: 1.65;
-        word-break: keep-all;
-    }
-
-    .analysis-note {
+    .note-box {
         padding: 1.05rem 1.15rem;
         border-radius: 14px;
         border-left: 6px solid #374151;
@@ -83,7 +55,25 @@ st.markdown(
         margin-top: 0.8rem;
     }
 
-    .blue-note {
+    .green-box {
+        padding: 1rem 1.1rem;
+        border-radius: 12px;
+        background-color: #eaf7ef;
+        color: #166534;
+        line-height: 1.65;
+        word-break: keep-all;
+    }
+
+    .yellow-box {
+        padding: 1rem 1.1rem;
+        border-radius: 12px;
+        background-color: #fff7d6;
+        color: #854d0e;
+        line-height: 1.65;
+        word-break: keep-all;
+    }
+
+    .blue-box {
         padding: 1rem 1.1rem;
         border-radius: 12px;
         background-color: #eff6ff;
@@ -91,37 +81,6 @@ st.markdown(
         line-height: 1.65;
         word-break: keep-all;
         margin-top: 1rem;
-    }
-
-    .small-muted {
-        color: #6b7280;
-        font-size: 0.93rem;
-        line-height: 1.65;
-    }
-
-    .stMetric {
-        min-width: 120px;
-    }
-
-    [data-testid="stMetricValue"] {
-        font-size: 1.55rem;
-        white-space: nowrap;
-    }
-
-    [data-testid="stMetricLabel"] {
-        white-space: nowrap;
-    }
-
-    div[data-testid="stHorizontalBlock"] {
-        gap: 1.25rem;
-    }
-
-    .plot-caption {
-        text-align: center;
-        color: #6b7280;
-        font-size: 0.9rem;
-        margin-top: -0.4rem;
-        margin-bottom: 0.6rem;
     }
 
     .topic-card {
@@ -136,14 +95,41 @@ st.markdown(
 
     .topic-card h4 {
         margin-top: 0;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.45rem;
         font-size: 1.05rem;
         font-weight: 800;
+    }
+
+    .plot-caption {
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-top: -0.3rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .small-muted {
+        color: #6b7280;
+        font-size: 0.93rem;
+        line-height: 1.65;
     }
 
     .footer-list {
         line-height: 1.9;
         word-break: keep-all;
+    }
+
+    [data-testid="stMetricValue"] {
+        font-size: 1.55rem;
+        white-space: nowrap;
+    }
+
+    [data-testid="stMetricLabel"] {
+        white-space: nowrap;
+    }
+
+    div[data-testid="stHorizontalBlock"] {
+        gap: 1.25rem;
     }
     </style>
     """,
@@ -153,81 +139,12 @@ st.markdown(
 # -----------------------------
 # 경로 설정
 # -----------------------------
-APP_DIR = Path(__file__).resolve().parent
-ROOT = APP_DIR.parent
+APP_DIR = Path(__file__).resolve().parent          # app/pages
+APP_ROOT = APP_DIR.parent                         # app
+ROOT = APP_ROOT.parent                            # repo root
 
-PLOTS_DIR = ROOT / "outputs" / "plots"
+FIGURES_DIR = ROOT / "outputs" / "figures"
 TABLES_DIR = ROOT / "outputs" / "tables"
-
-# 그래프 파일 후보
-PLOT_PATHS = {
-    "daily_positive_ratio": [
-        PLOTS_DIR / "daily_positive_ratio.png",
-        PLOTS_DIR / "daily_sentiment_ratio.png",
-        PLOTS_DIR / "positive_ratio_by_date.png",
-    ],
-    "daily_review_count": [
-        PLOTS_DIR / "daily_review_count.png",
-        PLOTS_DIR / "review_count_by_date.png",
-        PLOTS_DIR / "daily_reviews.png",
-    ],
-    "period_positive_ratio": [
-        PLOTS_DIR / "period_positive_ratio.png",
-        PLOTS_DIR / "positive_ratio_by_period.png",
-        PLOTS_DIR / "period_sentiment_ratio.png",
-    ],
-    "period_review_length": [
-        PLOTS_DIR / "period_review_length.png",
-        PLOTS_DIR / "avg_review_length_by_period.png",
-        PLOTS_DIR / "period_avg_review_length.png",
-    ],
-    "positive_keywords": [
-        PLOTS_DIR / "positive_keyword_count.png",
-        PLOTS_DIR / "positive_keywords.png",
-        PLOTS_DIR / "positive_keyword_bar.png",
-    ],
-    "negative_keywords": [
-        PLOTS_DIR / "negative_keyword_count.png",
-        PLOTS_DIR / "negative_keywords.png",
-        PLOTS_DIR / "negative_keyword_bar.png",
-    ],
-    "topic_distribution": [
-        PLOTS_DIR / "topic_distribution.png",
-        PLOTS_DIR / "bertopic_topic_distribution.png",
-        PLOTS_DIR / "topic_count.png",
-    ],
-}
-
-# 표 파일 후보
-TABLE_PATHS = {
-    "positive_keywords": [
-        TABLES_DIR / "positive_keywords.csv",
-        TABLES_DIR / "positive_keyword_count.csv",
-        TABLES_DIR / "positive_keyword_table.csv",
-    ],
-    "negative_keywords": [
-        TABLES_DIR / "negative_keywords.csv",
-        TABLES_DIR / "negative_keyword_count.csv",
-        TABLES_DIR / "negative_keyword_table.csv",
-    ],
-    "period_keywords": [
-        TABLES_DIR / "period_keywords.csv",
-        TABLES_DIR / "period_keyword_count.csv",
-        TABLES_DIR / "keywords_by_period.csv",
-    ],
-    "positive_examples": [
-        TABLES_DIR / "positive_review_examples.csv",
-        TABLES_DIR / "positive_examples.csv",
-    ],
-    "negative_examples": [
-        TABLES_DIR / "negative_review_examples.csv",
-        TABLES_DIR / "negative_examples.csv",
-    ],
-    "topic_info": [
-        TABLES_DIR / "topic_info.csv",
-        TABLES_DIR / "bertopic_topic_info.csv",
-    ],
-}
 
 # -----------------------------
 # 최종 분석 기준값
@@ -247,6 +164,76 @@ TOPIC_SUMMARY = {
 }
 
 # -----------------------------
+# 실제 GitHub 산출물 기준 파일명
+# -----------------------------
+FIGURE_PATHS = {
+    "daily_positive_ratio": [
+        FIGURES_DIR / "positive_ratio_by_date.png",
+    ],
+    "daily_review_count": [
+        FIGURES_DIR / "review_count_by_date.png",
+    ],
+    "period_positive_ratio": [
+        FIGURES_DIR / "refined_positive_ratio_by_period.png",
+    ],
+    "period_review_length": [
+        FIGURES_DIR / "refined_avg_review_length_by_period.png",
+        FIGURES_DIR / "avg_review_length_by_date.png",
+    ],
+    "positive_keywords": [
+        FIGURES_DIR / "refined_top_keywords_bar.png",
+        FIGURES_DIR / "top_keywords_bar.png",
+    ],
+    "negative_keywords": [
+        FIGURES_DIR / "refined_negative_keywords_bar.png",
+    ],
+    "bigram": [
+        FIGURES_DIR / "refined_bigram_bar.png",
+        FIGURES_DIR / "bigram_bar.png",
+    ],
+    "tfidf": [
+        FIGURES_DIR / "refined_top_tfidf_terms.png",
+        FIGURES_DIR / "top_tfidf_terms.png",
+    ],
+}
+
+TABLE_PATHS = {
+    "summary": [
+        TABLES_DIR / "summary_statistics.csv",
+    ],
+    "daily_trend": [
+        TABLES_DIR / "daily_trend.csv",
+        TABLES_DIR / "daily_trend_from_notebook.csv",
+    ],
+    "positive_keywords": [
+        TABLES_DIR / "refined_positive_top_keywords.csv",
+        TABLES_DIR / "top_keywords_positive.csv",
+    ],
+    "negative_keywords": [
+        TABLES_DIR / "refined_negative_top_keywords.csv",
+        TABLES_DIR / "top_keywords_negative.csv",
+    ],
+    "period_keywords": [
+        TABLES_DIR / "refined_period_keywords.csv",
+    ],
+    "period_summary": [
+        TABLES_DIR / "refined_period_summary.csv",
+    ],
+    "positive_examples": [
+        TABLES_DIR / "refined_positive_long_samples.csv",
+        TABLES_DIR / "positive_review_samples.csv",
+    ],
+    "negative_examples": [
+        TABLES_DIR / "refined_negative_long_samples.csv",
+        TABLES_DIR / "negative_review_samples.csv",
+    ],
+    "bigrams": [
+        TABLES_DIR / "refined_bigrams.csv",
+        TABLES_DIR / "bigrams.csv",
+    ],
+}
+
+# -----------------------------
 # 유틸 함수
 # -----------------------------
 def first_existing(paths: list[Path]) -> Path | None:
@@ -257,9 +244,9 @@ def first_existing(paths: list[Path]) -> Path | None:
 
 
 @st.cache_data
-def load_csv_if_exists(paths: list[Path]) -> pd.DataFrame:
-    path = first_existing(paths)
-    if path is None:
+def load_csv(path_str: str) -> pd.DataFrame:
+    path = Path(path_str)
+    if not path.exists():
         return pd.DataFrame()
 
     try:
@@ -268,46 +255,47 @@ def load_csv_if_exists(paths: list[Path]) -> pd.DataFrame:
         return pd.DataFrame()
 
 
-def show_image_from_candidates(key: str, caption: str | None = None) -> None:
-    path = first_existing(PLOT_PATHS[key])
+def load_table(key: str) -> pd.DataFrame:
+    path = first_existing(TABLE_PATHS[key])
+    if path is None:
+        return pd.DataFrame()
+    return load_csv(str(path))
+
+
+def show_figure(key: str, caption: str) -> None:
+    path = first_existing(FIGURE_PATHS[key])
     if path is None:
         st.info(f"그래프 파일을 찾을 수 없습니다: {key}")
         return
 
     st.image(str(path), use_container_width=True)
-
-    if caption:
-        st.markdown(
-            f"""
-            <div class="plot-caption">{caption}</div>
-            """,
-            unsafe_allow_html=True,
-        )
+    st.markdown(
+        f"""
+        <div class="plot-caption">{caption}</div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
-def normalize_keyword_table(df: pd.DataFrame) -> pd.DataFrame:
+def normalize_table(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return df
 
     rename_map = {}
-
     for col in df.columns:
         lower = col.lower()
-        if lower in ["word", "token", "keyword", "keywords"]:
+
+        if lower in ["word", "token", "keyword", "keywords", "term"]:
             rename_map[col] = "keyword"
         elif lower in ["freq", "frequency", "count", "counts"]:
             rename_map[col] = "count"
+        elif lower in ["review", "text", "content", "review_text"]:
+            rename_map[col] = "review"
 
-    df = df.rename(columns=rename_map)
-
-    keep_cols = [col for col in ["period", "sentiment", "keyword", "count"] if col in df.columns]
-    if keep_cols:
-        df = df[keep_cols]
-
-    return df
+    return df.rename(columns=rename_map)
 
 
-def show_dataframe(df: pd.DataFrame, empty_message: str, height: int = 320) -> None:
+def show_table(df: pd.DataFrame, empty_message: str, height: int = 340) -> None:
     if df.empty:
         st.info(empty_message)
     else:
@@ -317,7 +305,7 @@ def show_dataframe(df: pd.DataFrame, empty_message: str, height: int = 320) -> N
 # -----------------------------
 # 상단
 # -----------------------------
-top_left, top_right = st.columns([1, 1])
+top_left, _ = st.columns([1.1, 1.9])
 
 with top_left:
     if st.button("← 소개 페이지로 돌아가기", use_container_width=True):
@@ -353,7 +341,7 @@ i1, i2 = st.columns(2, gap="large")
 with i1:
     st.markdown(
         """
-        <div class="insight-green">
+        <div class="green-box">
         <b>핵심 메시지 1</b><br>
         전체적으로 긍정 비율이 매우 높게 나타납니다.
         </div>
@@ -365,7 +353,7 @@ with i1:
 
     st.markdown(
         """
-        <div class="insight-green">
+        <div class="green-box">
         <b>핵심 메시지 2</b><br>
         긍정 리뷰에서는 배우 연기와 감정적 여운을 중심으로 한 표현이 두드러집니다.
         </div>
@@ -376,7 +364,7 @@ with i1:
 with i2:
     st.markdown(
         """
-        <div class="insight-yellow">
+        <div class="yellow-box">
         <b>핵심 메시지 3</b><br>
         날짜별 긍정 비율 추이에서는 후반부에 소폭 하락 구간이 관찰됩니다.
         </div>
@@ -388,7 +376,7 @@ with i2:
 
     st.markdown(
         """
-        <div class="insight-yellow">
+        <div class="yellow-box">
         <b>핵심 메시지 4</b><br>
         부정 리뷰에서는 스토리, 연출, 기대 대비 아쉬움 관련 표현이 상대적으로 더 많이 나타납니다.
         </div>
@@ -407,21 +395,15 @@ col1, col2 = st.columns(2, gap="large")
 
 with col1:
     st.subheader("날짜별 긍정 비율 추이")
-    show_image_from_candidates(
-        "daily_positive_ratio",
-        "날짜별 긍정 비율 변화",
-    )
+    show_figure("daily_positive_ratio", "날짜별 긍정 비율 변화")
 
 with col2:
     st.subheader("날짜별 리뷰 수 변화")
-    show_image_from_candidates(
-        "daily_review_count",
-        "날짜별 리뷰 수 변화",
-    )
+    show_figure("daily_review_count", "날짜별 리뷰 수 변화")
 
 st.markdown(
     """
-    <div class="analysis-note">
+    <div class="note-box">
     <b>해석 포인트</b><br>
     전체 평균만 보면 매우 긍정적인 작품처럼 보이지만, 날짜별 추이를 함께 보면 일부 후반부 구간에서
     긍정 비율이 다소 흔들리는 구간을 확인할 수 있습니다. 이는 영화 평가가 고정된 하나의 수치가 아니라,
@@ -431,14 +413,10 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-with st.expander("날짜별 요약 보기"):
-    st.write(
-        """
-        날짜별 리뷰 수와 긍정 비율은 영화 개봉 이후 관객 반응이 어떻게 확산되고 변화했는지 보여주는 지표입니다.
-        리뷰 수가 많은 시기에는 대중적 관심이 집중되었고, 긍정 비율의 변화는 관객 기대와 실제 관람 경험의 차이를
-        간접적으로 보여줄 수 있습니다.
-        """
-    )
+daily_trend = normalize_table(load_table("daily_trend"))
+
+with st.expander("날짜별 데이터 표 보기"):
+    show_table(daily_trend, "날짜별 추이 표 파일을 찾을 수 없습니다.", height=360)
 
 st.markdown("---")
 
@@ -451,38 +429,28 @@ col1, col2 = st.columns(2, gap="large")
 
 with col1:
     st.subheader("시기별 긍정 비율")
-    show_image_from_candidates(
-        "period_positive_ratio",
-        "초반·중반·후반 긍정 비율 비교",
-    )
+    show_figure("period_positive_ratio", "초반·중반·후반 긍정 비율 비교")
 
 with col2:
     st.subheader("시기별 평균 리뷰 길이")
-    show_image_from_candidates(
-        "period_review_length",
-        "초반·중반·후반 평균 리뷰 길이 비교",
-    )
+    show_figure("period_review_length", "초반·중반·후반 평균 리뷰 길이 비교")
 
 st.markdown(
     """
-    <div class="analysis-note">
+    <div class="note-box">
     <b>해석 포인트</b><br>
     시기별 비교는 단순히 리뷰 수의 차이만 보는 것이 아니라, 작품을 둘러싼 기대와 반응의 흐름이
-    어떻게 이동하는지를 보여줍니다. 특히 후반부의 소폭 변화는 사회적 기대와 실제 경험 사이의 간극 가능성을
-    시사합니다.
+    어떻게 이동하는지를 보여줍니다. 특히 후반부의 소폭 변화는 사회적 기대와 실제 경험 사이의
+    간극 가능성을 시사합니다.
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-with st.expander("시기별 요약 보기"):
-    st.write(
-        """
-        초반 리뷰는 개봉 직후의 기대와 관심을 반영하는 경향이 있고,
-        중반 리뷰는 입소문과 추천의 영향을 받을 수 있습니다.
-        후반 리뷰는 이미 형성된 평가를 접한 관객들의 기대와 비교 속에서 작성될 가능성이 있습니다.
-        """
-    )
+period_summary = normalize_table(load_table("period_summary"))
+
+with st.expander("시기별 요약 표 보기"):
+    show_table(period_summary, "시기별 요약 표 파일을 찾을 수 없습니다.", height=260)
 
 st.markdown("---")
 
@@ -491,7 +459,9 @@ st.markdown("---")
 # -----------------------------
 st.header("3. 긍정·부정 담론 구조")
 
-tab_pos, tab_neg, tab_topic = st.tabs(["긍정 키워드", "부정 키워드", "토픽 분포"])
+tab_pos, tab_neg, tab_bigram, tab_tfidf, tab_topic = st.tabs(
+    ["긍정 키워드", "부정 키워드", "결합 표현", "TF-IDF", "BERTopic 요약"]
+)
 
 with tab_pos:
     st.subheader("긍정 리뷰 핵심 표현")
@@ -499,24 +469,19 @@ with tab_pos:
     col1, col2 = st.columns([1.35, 1.0], gap="large")
 
     with col1:
-        show_image_from_candidates(
-            "positive_keywords",
-            "긍정 리뷰 상위 키워드",
-        )
+        show_figure("positive_keywords", "긍정 리뷰 상위 키워드")
 
     with col2:
-        positive_keywords = normalize_keyword_table(
-            load_csv_if_exists(TABLE_PATHS["positive_keywords"])
-        )
-        show_dataframe(
-            positive_keywords.head(15),
+        positive_keywords = normalize_table(load_table("positive_keywords"))
+        show_table(
+            positive_keywords.head(20),
             "긍정 키워드 표 파일을 찾을 수 없습니다.",
-            height=380,
+            height=390,
         )
 
     st.markdown(
         """
-        <div class="blue-note">
+        <div class="blue-box">
         긍정 담론의 중심은 배우 연기, 감정적 여운, 몰입 경험으로 해석할 수 있습니다.
         </div>
         """,
@@ -529,59 +494,126 @@ with tab_neg:
     col1, col2 = st.columns([1.35, 1.0], gap="large")
 
     with col1:
-        show_image_from_candidates(
-            "negative_keywords",
-            "부정 리뷰 상위 키워드",
-        )
+        show_figure("negative_keywords", "부정 리뷰 상위 키워드")
 
     with col2:
-        negative_keywords = normalize_keyword_table(
-            load_csv_if_exists(TABLE_PATHS["negative_keywords"])
-        )
-        show_dataframe(
-            negative_keywords.head(15),
+        negative_keywords = normalize_table(load_table("negative_keywords"))
+        show_table(
+            negative_keywords.head(20),
             "부정 키워드 표 파일을 찾을 수 없습니다.",
-            height=380,
+            height=390,
         )
 
     st.markdown(
         """
-        <div class="blue-note">
+        <div class="blue-box">
         부정 담론은 스토리, 연출, 기대 대비 아쉬움처럼 특정 요소에 대한 세부 평가와 연결됩니다.
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-with tab_topic:
-    st.subheader("BERTopic 토픽 분포")
+with tab_bigram:
+    st.subheader("결합 표현 분석")
 
-    col1, col2 = st.columns([1.25, 1.0], gap="large")
+    col1, col2 = st.columns([1.35, 1.0], gap="large")
 
     with col1:
-        show_image_from_candidates(
-            "topic_distribution",
-            "BERTopic 주요 토픽별 리뷰 수",
-        )
+        show_figure("bigram", "상위 결합 표현")
 
     with col2:
-        for topic_id, topic_text in TOPIC_SUMMARY.items():
-            st.markdown(
-                f"""
-                <div class="topic-card">
-                    <h4>Topic {topic_id}</h4>
-                    <p>{topic_text}</p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-            st.markdown("<div style='height: 0.7rem;'></div>", unsafe_allow_html=True)
+        bigrams = normalize_table(load_table("bigrams"))
+        show_table(
+            bigrams.head(20),
+            "결합 표현 표 파일을 찾을 수 없습니다.",
+            height=390,
+        )
 
     st.markdown(
         """
-        <div class="blue-note">
-        BERTopic 결과는 관객 반응이 하나의 긍정/부정 구분으로만 설명되지 않고,
-        배우 연기, 감동, 한국영화 만족감, CG 아쉬움 등 여러 담론 축으로 구성되어 있음을 보여줍니다.
+        <div class="blue-box">
+        단어 하나가 아니라 함께 등장하는 표현을 보면, 관객이 어떤 맥락에서 작품을 평가했는지 더 구체적으로 파악할 수 있습니다.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with tab_tfidf:
+    st.subheader("TF-IDF 핵심 표현")
+
+    show_figure("tfidf", "TF-IDF 기준 주요 표현")
+
+    st.markdown(
+        """
+        <div class="blue-box">
+        TF-IDF는 단순 빈도보다 특정 리뷰 집합에서 상대적으로 두드러지는 표현을 확인하는 데 유용합니다.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with tab_topic:
+    st.subheader("BERTopic 주요 토픽 구조")
+
+    t1, t2 = st.columns(2, gap="large")
+
+    with t1:
+        st.markdown(
+            """
+            <div class="topic-card">
+            <h4>Topic 0</h4>
+            <p><b>배우 연기와 감동 중심의 전반적 호평</b></p>
+            <p class="small-muted">가장 큰 리뷰 반응 축으로, 작품 전체에 대한 만족감과 정서적 몰입이 함께 나타납니다.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with t2:
+        st.markdown(
+            """
+            <div class="topic-card">
+            <h4>Topic 1</h4>
+            <p><b>유해진·박지훈 연기에 대한 집중 호평</b></p>
+            <p class="small-muted">특정 배우의 연기력과 캐릭터 표현에 대한 관객의 긍정적 평가가 중심을 이룹니다.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+
+    t3, t4 = st.columns(2, gap="large")
+
+    with t3:
+        st.markdown(
+            """
+            <div class="topic-card">
+            <h4>Topic 2</h4>
+            <p><b>오랜만에 만족스러운 한국영화라는 반응</b></p>
+            <p class="small-muted">작품을 개별 영화로만 평가하지 않고, 한국영화 전반에 대한 기대와 비교 속에서 해석하는 반응입니다.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with t4:
+        st.markdown(
+            """
+            <div class="topic-card">
+            <h4>Topic 3</h4>
+            <p><b>호랑이 CG에 대한 아쉬움</b></p>
+            <p class="small-muted">전체적인 호평 속에서도 특정 시각효과 요소에 대한 구체적 아쉬움이 독립적으로 확인되었습니다.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        """
+        <div class="blue-box">
+        현재 GitHub 산출물 기준으로 BERTopic 전용 이미지 파일은 별도로 확인되지 않아,
+        본 페이지에서는 토픽 결과를 해석 카드 형태로 정리했습니다.
         </div>
         """,
         unsafe_allow_html=True,
@@ -594,19 +626,17 @@ st.markdown("---")
 # -----------------------------
 st.header("4. 시기별 키워드 비교")
 
-period_keywords = normalize_keyword_table(
-    load_csv_if_exists(TABLE_PATHS["period_keywords"])
-)
+period_keywords = normalize_table(load_table("period_keywords"))
 
-show_dataframe(
-    period_keywords.head(30),
+show_table(
+    period_keywords.head(40),
     "시기별 키워드 표 파일을 찾을 수 없습니다.",
-    height=420,
+    height=430,
 )
 
 st.markdown(
     """
-    <div class="analysis-note">
+    <div class="note-box">
     <b>해석 포인트</b><br>
     시기별 키워드를 함께 보면 동일한 작품에 대한 반응도 시간에 따라 강조점이 달라질 수 있음을 확인할 수 있습니다.
     초반에는 기대와 화제성, 중반에는 관람 경험의 공유, 후반에는 누적된 평가와 비교가 더 강하게 반영될 수 있습니다.
@@ -625,24 +655,24 @@ st.header("5. 대표 리뷰 예시")
 tab_pos_review, tab_neg_review = st.tabs(["긍정 리뷰 예시", "부정 리뷰 예시"])
 
 with tab_pos_review:
-    positive_examples = load_csv_if_exists(TABLE_PATHS["positive_examples"])
-    show_dataframe(
+    positive_examples = normalize_table(load_table("positive_examples"))
+    show_table(
         positive_examples.head(10),
         "긍정 리뷰 예시 파일을 찾을 수 없습니다.",
-        height=360,
+        height=380,
     )
 
 with tab_neg_review:
-    negative_examples = load_csv_if_exists(TABLE_PATHS["negative_examples"])
-    show_dataframe(
+    negative_examples = normalize_table(load_table("negative_examples"))
+    show_table(
         negative_examples.head(10),
         "부정 리뷰 예시 파일을 찾을 수 없습니다.",
-        height=360,
+        height=380,
     )
 
 st.markdown(
     """
-    <div class="analysis-note">
+    <div class="note-box">
     <b>해석 포인트</b><br>
     대표 리뷰 예시는 정량 분석 결과가 실제 관객 표현 속에서 어떻게 나타나는지 확인하기 위한 보조 자료입니다.
     긍정 리뷰는 연기와 감정적 여운을 중심으로, 부정 리뷰는 특정 장면·연출·기대 대비 아쉬움을 중심으로 구성되는
