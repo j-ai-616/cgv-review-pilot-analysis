@@ -1,4 +1,4 @@
-# CGV Movie Review Analytics with Sentiment Analysis & BERTopic
+# 영화 <왕과 사는 남자>, CGV Movie Review Analytics with Sentiment Analysis & BERTopic
 
 > CGV 영화 리뷰 데이터를 기반으로 관객 반응의 감성 분포, 시계열 변화, 핵심 표현 구조, 그리고 BERTopic 기반 토픽 구조를 분석한 Streamlit 프로젝트입니다.  
 > 영화 소비자 반응을 데이터 기반으로 해석하고, 이를 시각적으로 전달하는 포트폴리오형 텍스트 분석 프로젝트입니다.
